@@ -42,9 +42,9 @@ func Log() error {
 }
 
 //Database db
-func Database(ctx context.Context, ignoreErr bool, debug bool) error {
+func Database(ctx context.Context, ignoreErr bool) error {
 	db.DefaultLogLevel = logger.Silent
-	if debug {
+	if configs.ENV.App.Debug {
 		db.DefaultLogLevel = logger.Info
 	}
 	_, err := hunch.Retry(ctx, 0, func(c context.Context) (interface{}, error) {
@@ -55,24 +55,25 @@ func Database(ctx context.Context, ignoreErr bool, debug bool) error {
 		}
 		return nil, err
 	})
-
-	go func() {
-		db.ConnStore.Range(func(key, value interface{}) bool {
-			k := key.(string)
-			d, _ := db.GetConnect(k).DB()
-			go func() {
-				for {
-					err := d.PingContext(context.Background())
-					if err != nil {
-						fmt.Println(k + " connect error")
-						os.Exit(0)
+	if !ignoreErr {
+		go func() {
+			db.ConnStore.Range(func(key, value interface{}) bool {
+				k := key.(string)
+				d, _ := db.GetConnect(k).DB()
+				go func() {
+					for {
+						err := d.PingContext(context.Background())
+						if err != nil {
+							fmt.Println(k + " connect error")
+							os.Exit(0)
+						}
+						time.Sleep(time.Second * 5)
 					}
-					time.Sleep(time.Second * 5)
-				}
-			}()
-			return true
-		})
-	}()
+				}()
+				return true
+			})
+		}()
+	}
 
 	return err
 }
@@ -87,23 +88,24 @@ func Cache(ctx context.Context, ignoreErr bool) error {
 		}
 		return nil, err
 	})
-
-	go func() {
-		cache.CacheMap.Range(func(key, value interface{}) bool {
-			k := key.(string)
-			d := cache.GetCache(k)
-			go func() {
-				for {
-					if d.Ping() != nil {
-						fmt.Println(k + " connect error")
-						os.Exit(0)
+	if !ignoreErr {
+		go func() {
+			cache.CacheMap.Range(func(key, value interface{}) bool {
+				k := key.(string)
+				d := cache.GetCache(k)
+				go func() {
+					for {
+						if d.Ping() != nil {
+							fmt.Println(k + " connect error")
+							os.Exit(0)
+						}
+						time.Sleep(time.Second * 5)
 					}
-					time.Sleep(time.Second * 5)
-				}
-			}()
-			return true
-		})
-	}()
+				}()
+				return true
+			})
+		}()
+	}
 
 	return err
 }
@@ -118,23 +120,24 @@ func Queue(ctx context.Context, ignoreErr bool) error {
 		}
 		return nil, err
 	})
-
-	go func() {
-		queue.QueueStore.Range(func(key, value interface{}) bool {
-			k := key.(string)
-			d := queue.GetQueueDrive(k)
-			go func() {
-				for {
-					if d.Ping() != nil {
-						fmt.Println(k + " connect error")
-						os.Exit(0)
+	if !ignoreErr {
+		go func() {
+			queue.QueueStore.Range(func(key, value interface{}) bool {
+				k := key.(string)
+				d := queue.GetQueueDrive(k)
+				go func() {
+					for {
+						if d.Ping() != nil {
+							fmt.Println(k + " connect error")
+							os.Exit(0)
+						}
+						time.Sleep(time.Second * 5)
 					}
-					time.Sleep(time.Second * 5)
-				}
-			}()
-			return true
-		})
-	}()
+				}()
+				return true
+			})
+		}()
+	}
 
 	return err
 }

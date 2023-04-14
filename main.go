@@ -4,7 +4,6 @@ import (
 	"context"
 	"github.com/aaronjan/hunch"
 	"good/cmd/app"
-	"good/configs"
 )
 
 func main() {
@@ -21,7 +20,7 @@ func main() {
 					return nil, app.Log()
 				},
 				func(ctx context.Context) (interface{}, error) {
-					return nil, app.Database(ctx, false, configs.ENV.App.Debug)
+					return nil, app.Database(ctx, false)
 				},
 				func(ctx context.Context) (interface{}, error) {
 					return nil, app.Cache(ctx, false)

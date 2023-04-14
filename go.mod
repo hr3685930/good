@@ -32,6 +32,7 @@ require (
 	github.com/sentinel-group/sentinel-go-adapters v1.0.1
 	github.com/spf13/viper v1.15.0
 	github.com/streadway/amqp v1.0.0
+	github.com/stretchr/testify v1.8.2
 	github.com/uber/jaeger-client-go v2.30.0+incompatible
 	github.com/urfave/cli v1.22.1
 	go.uber.org/zap v1.24.0
@@ -105,6 +106,7 @@ require (
 	github.com/oklog/ulid v1.3.1 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.6 // indirect
 	github.com/pierrec/lz4/v4 v4.1.17 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/prometheus/client_model v0.3.0 // indirect
 	github.com/prometheus/common v0.39.0 // indirect
 	github.com/prometheus/procfs v0.9.0 // indirect
