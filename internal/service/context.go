@@ -8,7 +8,7 @@ import (
 // Context Context
 type Context struct {
 	Ctx  context.Context
-	Conf configs.DotEnv
+	Conf configs.Conf
 }
 
 // NewContext NewContext

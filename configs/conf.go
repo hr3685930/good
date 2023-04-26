@@ -1,10 +1,10 @@
 package configs
 
 // ENV ENV
-var ENV DotEnv
+var ENV Conf
 
-//DotEnv DotEnv
-type DotEnv struct {
+//Conf Conf
+type Conf struct {
 	App      App
 	Database Database
 	Queue    Queue

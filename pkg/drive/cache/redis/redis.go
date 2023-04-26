@@ -2,6 +2,8 @@ package redis
 
 import (
 	"context"
+	"github.com/go-redsync/redsync/v4"
+	"github.com/go-redsync/redsync/v4/redis/goredis/v8"
 	"github.com/pkg/errors"
 	"net"
 	"time"
@@ -13,6 +15,7 @@ import (
 type Redis struct {
 	address string
 	*rd.Client
+	*redsync.Redsync
 }
 
 // New creates an instance of Redis cache driver
@@ -25,7 +28,10 @@ func New(dsn string) (*Redis, error) {
 	if _, err := net.Dial("tcp", opt.Addr); err != nil {
 		return nil, err
 	}
-	return &Redis{address: opt.Addr, Client: conn}, nil
+	// new redis lock
+	pool := goredis.NewPool(conn)
+	rs := redsync.New(pool)
+	return &Redis{address: opt.Addr, Client: conn, Redsync: rs}, nil
 }
 
 // Contains checks if cached key exists in Redis storage
