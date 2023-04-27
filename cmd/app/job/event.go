@@ -66,12 +66,12 @@ func RPCSend(ctx context.Context, obj interface{}, endpoint string, cloudevent c
 	if err != nil {
 		return errs.InternalError("set event data error")
 	}
-	cli := proto.NewEventClient(conn)
+	client := proto.NewEventClient(conn)
 	req, err := format.ToProto(&cloudevent)
 	if err != nil {
 		return errs.InternalError("event to proto error")
 	}
-	_, err = cli.Send(ctx, req)
+	_, err = client.Send(ctx, req)
 	return err
 }
 
