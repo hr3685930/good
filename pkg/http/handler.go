@@ -53,7 +53,7 @@ type ErrorReport func(HTTPCode int, response gin.H, stack string, c *gin.Context
 func ErrHandler(errorReport ErrorReport) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if c.Request.Body != nil {
-			if c.Request.MultipartForm == nil {
+			if c.Request.MultipartForm != nil {
 				c.Set("jsonBody", "")
 			} else {
 				bodyBytes, _ := ioutil.ReadAll(c.Request.Body)
