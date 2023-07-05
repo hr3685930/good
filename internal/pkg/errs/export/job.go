@@ -4,19 +4,19 @@ import (
 	"fmt"
 	"github.com/pkg/errors"
 	"good/configs"
-	"good/pkg/goo"
+	"good/pkg/errs"
 )
 
 // JobErrorReport JobErrorReport
 func JobErrorReport(err error, errorType string, data interface{}) {
-	e, ok := err.(interface{ goo.Error })
+	e, ok := err.(interface{ errs.Error })
 	var stack string
 	if ok {
 		stack = e.GetStack()
 	}else{
 		stack = fmt.Sprintf("%+v\n", errors.New(err.Error()))
 	}
-	if configs.ENV.App.Env == "local" {
+	if configs.ENV.App.Debug {
 		fmt.Println(stack)
 		return
 	}

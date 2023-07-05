@@ -1,4 +1,4 @@
-package goo
+package errs
 
 // Error GooError
 type Error interface {

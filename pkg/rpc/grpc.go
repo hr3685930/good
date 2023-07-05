@@ -6,6 +6,7 @@ import (
 	"github.com/alibaba/sentinel-golang/core/base"
 	"github.com/pkg/errors"
 	sentinel "github.com/sentinel-group/sentinel-go-adapters/grpc"
+	"good/pkg/errs"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
@@ -83,6 +84,8 @@ func ErrorHandler(md metadata.MD, req interface{}, err error, errReport ErrorRep
 	if e, ok := err.(*GrpcError); ok {
 		stack = string(e.Stack)
 		err = e.Err
+	} else if errPkg, okk := err.(interface{ errs.Error }); okk {
+		stack = errPkg.GetStack()
 	} else {
 		stack = string(debug.Stack())
 	}

@@ -14,7 +14,7 @@ var dontReportGrpcCode = []codes.Code{
 
 //GRPCErrorReport GRPCErrorReport
 func GRPCErrorReport(md metadata.MD, req interface{}, stack string, status *status.Status) {
-	if configs.ENV.App.Env == "local" {
+	if configs.ENV.App.Debug {
 		fmt.Println(stack)
 		return
 	}

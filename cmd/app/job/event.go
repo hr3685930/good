@@ -80,21 +80,21 @@ func Bus(ctx context.Context, e cloudevents.Event) protocol.Result {
 	if _, ok := EventListeners[e.Type()]; !ok {
 		return errs.ResourceNotFound("event not found")
 	}
-	g := goo.NewGroup(10)
+	var g goo.Group
 	for _, lis := range EventListeners[e.Type()] {
 		listen := lis
-		g.One(ctx, func(ctx context.Context) (interface{}, error) {
-			if err := listen(ctx, e.DataEncoded); err != nil {
-				return nil, err
+		g.One(ctx, func(ctx context.Context) error {
+			err := listen(ctx, e.DataEncoded)
+			if err != nil {
+				return err
 			}
-			return nil, nil
+			return nil
 		})
 	}
-	_, errArr := g.Wait()
-	for _, err := range errArr {
-		if err != nil {
-			export.JobErrorReport(err, "event", e.DataEncoded)
-		}
+	err := g.Wait()
+	if err != nil {
+		export.JobErrorReport(err, "event", e.DataEncoded)
+		return err
 	}
 	return nil
 }

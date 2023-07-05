@@ -8,6 +8,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/pkg/errors"
 	sentinelPlugin "github.com/sentinel-group/sentinel-go-adapters/gin"
+	"good/pkg/errs"
 	"io/ioutil"
 	"net/http"
 	"time"
@@ -82,7 +83,12 @@ func ErrHandler(errorReport ErrorReport) gin.HandlerFunc {
 				} else {
 					response["code"] = InternalError.Code
 					response["message"] = InternalError.Msg
-					stack = string(InternalError.Stack)
+					errPkg, ok := err.(interface{ errs.Error })
+					if ok {
+						stack = errPkg.GetStack()
+					} else {
+						stack = string(InternalError.Stack)
+					}
 				}
 
 				// error report

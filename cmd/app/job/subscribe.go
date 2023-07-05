@@ -13,7 +13,7 @@ import (
 // Queue Queue
 func Queue(c *cli.Context) {
 	topic := c.String("topic")
-	if _,ok := TopicListener[topic]; !ok {
+	if _, ok := TopicListener[topic]; !ok {
 		panic("topic not found")
 	}
 	Subscribe(topic)
@@ -26,21 +26,19 @@ func Subscribe(topic string) {
 		panic(err.Error())
 	}
 	queue.MQ.Subscribe(topic, func(ctx context.Context, msg []byte) error {
-		g := goo.NewGroup(10)
+		var g goo.Group
 		for _, lis := range TopicListener[topic] {
 			listen := lis
-			g.One(ctx, func(ctx context.Context) (interface{}, error) {
+			g.One(ctx, func(ctx context.Context) error {
 				if err = listen(ctx, msg); err != nil {
-					return nil, err
+					return err
 				}
-				return nil, nil
+				return nil
 			})
 		}
-		_, errArr := g.Wait()
-		for _, err = range errArr {
-			if err != nil {
-				export.JobErrorReport(err, "queue", msg)
-			}
+		err := g.Wait()
+		if err != nil {
+			export.JobErrorReport(err, "queue", msg)
 		}
 		return nil
 	})
@@ -66,21 +64,19 @@ func SubscribeAll() {
 
 	for topic, listeners := range TopicListener {
 		queue.MQ.Subscribe(topic, func(ctx context.Context, msg []byte) error {
-			g := goo.NewGroup(10)
+			var g goo.Group
 			for _, lis := range listeners {
 				listen := lis
-				g.One(ctx, func(ctx context.Context) (interface{}, error) {
+				g.One(ctx, func(ctx context.Context) error {
 					if err = listen(ctx, msg); err != nil {
-						return nil, err
+						return err
 					}
-					return nil, nil
+					return  nil
 				})
 			}
-			_, errArr := g.Wait()
-			for _, err = range errArr {
-				if err != nil {
-					export.JobErrorReport(err, "queue", msg)
-				}
+			err := g.Wait()
+			if err != nil {
+				export.JobErrorReport(err, "queue", msg)
 			}
 			return nil
 		})
