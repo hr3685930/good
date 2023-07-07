@@ -6,7 +6,8 @@ import (
 
 // Database default
 type Database struct {
-	Sqlite SQLite
+	Sqlite  SQLite
+	Mysql   Mysql
 	Default string `default:"sqlite" mapstructure:"default"`
 }
 

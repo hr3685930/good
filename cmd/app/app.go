@@ -13,6 +13,7 @@ import (
 	"good/configs"
 	"good/internal/logic/http"
 	"good/internal/pkg/errs/export"
+	"good/pkg/drive"
 	"good/pkg/drive/cache"
 	"good/pkg/drive/config"
 	"good/pkg/drive/db"
@@ -112,7 +113,7 @@ func Cache(ctx context.Context, ignoreErr bool) error {
 
 //Queue queue
 func Queue(ctx context.Context, ignoreErr bool) error {
-	_, err := hunch.Retry(ctx, 0, func(c context.Context) (interface{}, error) {
+	_, errs := hunch.Retry(ctx, 0, func(c context.Context) (interface{}, error) {
 		err := config.Drive(configs.ENV.Queue, configs.ENV.App, ignoreErr)
 		if err != nil {
 			fmt.Println("队列重连中...", err)
@@ -120,6 +121,7 @@ func Queue(ctx context.Context, ignoreErr bool) error {
 		}
 		return nil, err
 	})
+
 	if !ignoreErr {
 		go func() {
 			queue.QueueStore.Range(func(key, value interface{}) bool {
@@ -139,13 +141,15 @@ func Queue(ctx context.Context, ignoreErr bool) error {
 		}()
 	}
 
-	return err
+	return errs
 }
 
 // APP APP
 func APP() error {
 	goo.New()
 	goo.AsyncErrFunc = export.GoroutineErr
+
+	drive.InitFacade()
 	err := job.EventReceive()
 	if err != nil {
 		return err

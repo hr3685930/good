@@ -13,8 +13,8 @@ import (
 	"good/configs"
 	"good/internal/pkg/errs"
 	"good/internal/pkg/errs/export"
-	"good/internal/utils"
 	"good/internal/utils/format"
+	"good/pkg/drive"
 	"good/pkg/event"
 	"good/pkg/goo"
 	"google.golang.org/grpc"
@@ -36,7 +36,7 @@ func KafkaEventListen(c *cli.Context) {
 // EventReceive EventReceive
 func EventReceive() error {
 	event.SendFn = RPCSend
-	event.KafkaClient = utils.GetKafkaCli()
+	event.KafkaClient = drive.Kafka
 	return event.NewChanReceive(Bus)
 }
 

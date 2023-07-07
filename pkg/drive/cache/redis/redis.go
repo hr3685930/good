@@ -25,7 +25,7 @@ func New(dsn string) (*Redis, error) {
 		return nil, errors.New("解析redis dsn失败")
 	}
 	conn := rd.NewClient(opt)
-	if _, err := net.Dial("tcp", opt.Addr); err != nil {
+	if _, err := conn.Ping(context.Background()).Result(); err != nil {
 		return nil, err
 	}
 	// new redis lock

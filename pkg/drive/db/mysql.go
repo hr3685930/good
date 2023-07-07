@@ -30,7 +30,10 @@ func (m *MySQL) Connect() (*gorm.DB, error) {
 	if err != nil {
 		return nil, err
 	}
-	sqlDB, _ := orm.DB()
+	sqlDB, err := orm.DB()
+	if err != nil {
+		return nil, err
+	}
 	sqlDB.SetMaxIdleConns(10)
 	sqlDB.SetMaxOpenConns(100)
 	sqlDB.SetConnMaxLifetime(time.Hour)

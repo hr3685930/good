@@ -40,6 +40,10 @@ func (m KafkaDrive) Connect(key string, options interface{}, app interface{}) er
 
 	}
 	kafkaMQ := queue.NewKafka(m.Addr, m.App.Name)
+	_, err := kafkaMQ.GetCli()
+	if err != nil {
+		return err
+	}
 	queue.QueueStore.Store(key, kafkaMQ)
 	return nil
 }
