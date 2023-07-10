@@ -37,8 +37,12 @@ func (m KafkaDrive) Connect(key string, options interface{}, app interface{}) er
 			m.App.Debug = appValInfo.Field(i).Bool()
 			break
 		}
-
 	}
+
+	if m.App.Env == "testing" {
+		return nil
+	}
+
 	kafkaMQ := queue.NewKafka(m.Addr, m.App.Name)
 	_, err := kafkaMQ.GetCli()
 	if err != nil {

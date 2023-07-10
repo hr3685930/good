@@ -40,6 +40,10 @@ func (m ClickhouseDrive) Connect(key string, options interface{}, app interface{
 		}
 	}
 
+	if m.App.Env == "testing" {
+		return nil
+	}
+
 	clickhouseDB := db.NewClickHouse(m.Dsn, m.App.Debug)
 	orm, err := clickhouseDB.Connect()
 	if err != nil {

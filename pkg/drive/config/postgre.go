@@ -39,7 +39,9 @@ func (p PostgreDrive) Connect(key string, options interface{}, app interface{}) 
 			break
 		}
 	}
-
+	if p.App.Env == "testing" {
+		return nil
+	}
 	postgreDB := db.NewPostgre(p.Dsn, p.App.Debug)
 	orm, err := postgreDB.Connect()
 	if err != nil {

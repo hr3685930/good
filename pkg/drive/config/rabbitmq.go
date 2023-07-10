@@ -40,6 +40,9 @@ func (m RabbitMQDrive) Connect(key string, options interface{}, app interface{})
 		}
 
 	}
+	if m.App.Env == "testing" {
+		return nil
+	}
 	rabbitMQ := queue.NewAMQP(m.AmqpURI)
 	queue.QueueStore.Store(key, rabbitMQ)
 	return nil
