@@ -1,6 +1,7 @@
 package config
 
 import (
+	"good/pkg/drive"
 	"good/pkg/drive/queue"
 	"reflect"
 )
@@ -54,5 +55,5 @@ func (m KafkaDrive) Connect(key string, options interface{}, app interface{}) er
 
 // Default Default
 func (KafkaDrive) Default(key string) {
-	queue.MQ = queue.GetQueueDrive(key)
+	drive.Queue = queue.GetQueueDrive(key)
 }

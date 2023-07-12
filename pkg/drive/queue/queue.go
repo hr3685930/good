@@ -8,8 +8,6 @@ import (
 )
 
 var (
-	// MQ instance
-	MQ Queue
 	// QueueStore QueueStore
 	QueueStore sync.Map
 	// logger logger

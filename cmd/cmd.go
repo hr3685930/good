@@ -1,8 +1,8 @@
-package app
+package cmd
 
 import (
 	"github.com/urfave/cli"
-	"good/cmd/app/job"
+	"good/cmd/job"
 	commands "good/internal/logic/script"
 )
 

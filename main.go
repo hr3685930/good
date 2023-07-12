@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"github.com/aaronjan/hunch"
-	"good/cmd/app"
+	"good/cmd"
 )
 
 func main() {
@@ -11,39 +11,22 @@ func main() {
 	_, err := hunch.Waterfall(
 		ctx,
 		func(ctx context.Context, n interface{}) (interface{}, error) {
-			return nil, app.Config()
+			return nil, cmd.Config()
 		},
 		func(ctx context.Context, n interface{}) (interface{}, error) {
-			return hunch.All(
-				ctx,
-				func(ctx context.Context) (interface{}, error) {
-					return nil, app.Log()
-				},
-				func(ctx context.Context) (interface{}, error) {
-					return nil, app.Database(ctx, false)
-				},
-				func(ctx context.Context) (interface{}, error) {
-					return nil, app.Cache(ctx, false)
-				},
-				func(ctx context.Context) (interface{}, error) {
-					return nil, app.Queue(ctx, false)
-				},
-			)
+			return nil, cmd.Drive(ctx)
 		},
 		func(ctx context.Context, n interface{}) (interface{}, error) {
-			return nil, app.APP()
+			return nil, cmd.APP()
 		},
 		func(ctx context.Context, n interface{}) (interface{}, error) {
-			return nil, app.Signal()
+			return nil, cmd.Command()
 		},
 		func(ctx context.Context, n interface{}) (interface{}, error) {
-			return nil, app.Command()
+			return nil, cmd.HTTP()
 		},
 		func(ctx context.Context, n interface{}) (interface{}, error) {
-			return nil, app.HTTP()
-		},
-		func(ctx context.Context, n interface{}) (interface{}, error) {
-			return nil, app.GRPC()
+			return nil, cmd.GRPC()
 		},
 
 	)

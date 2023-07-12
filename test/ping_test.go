@@ -3,7 +3,7 @@ package test
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
-	cmdHTTP "good/cmd/app/http"
+	cmdHTTP "good/cmd/http"
 	r "good/internal/logic/http"
 	"net/http"
 	"net/http/httptest"

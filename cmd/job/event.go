@@ -3,6 +3,7 @@ package job
 import (
 	"context"
 	"encoding/json"
+	"github.com/Shopify/sarama"
 	cloudevents "github.com/cloudevents/sdk-go/v2"
 	ce "github.com/cloudevents/sdk-go/v2/event"
 	"github.com/cloudevents/sdk-go/v2/protocol"
@@ -13,8 +14,8 @@ import (
 	"good/configs"
 	"good/internal/pkg/errs"
 	"good/internal/pkg/errs/export"
-	"good/internal/utils/format"
-	"good/pkg/drive"
+	"good/internal/pkg/format"
+	"good/pkg/drive/queue"
 	"good/pkg/event"
 	"good/pkg/goo"
 	"google.golang.org/grpc"
@@ -33,10 +34,10 @@ func KafkaEventListen(c *cli.Context) {
 	}
 }
 
-// EventReceive EventReceive
-func EventReceive() error {
+// NewEventReceive NewEventReceive
+func NewEventReceive() error {
 	event.SendFn = RPCSend
-	event.KafkaClient = drive.Kafka
+	event.KafkaClient = GetKafkaCli()
 	return event.NewChanReceive(Bus)
 }
 
@@ -95,6 +96,16 @@ func Bus(ctx context.Context, e cloudevents.Event) protocol.Result {
 	if err != nil {
 		export.JobErrorReport(err, "event", e.DataEncoded)
 		return err
+	}
+	return nil
+}
+
+// GetKafkaCli GetKafkaCli
+func GetKafkaCli() sarama.Client {
+	if queue.GetQueueDrive("kafka") != nil {
+		KafkaDrive := queue.GetQueueDrive("kafka").(*queue.Kafka)
+		KafkaCli, _ := KafkaDrive.GetCli()
+		return KafkaCli
 	}
 	return nil
 }

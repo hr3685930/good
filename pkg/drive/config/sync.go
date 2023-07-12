@@ -1,6 +1,7 @@
 package config
 
 import (
+	"good/pkg/drive"
 	"good/pkg/drive/cache"
 	"good/pkg/drive/cache/sync"
 	"reflect"
@@ -36,5 +37,5 @@ func (m SyncDrive) Connect(key string, options interface{}, app interface{}) err
 
 // Default Default
 func (SyncDrive) Default(key string) {
-	cache.Cached = cache.GetCache(key)
+	drive.Cache = cache.GetCache(key)
 }

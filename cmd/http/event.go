@@ -1,7 +1,7 @@
 package http
 
 import (
-	"good/cmd/app/job"
+	"good/cmd/job"
 	"good/internal/logic/http"
 	"good/pkg/event"
 )

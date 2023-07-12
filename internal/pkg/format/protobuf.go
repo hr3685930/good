@@ -6,8 +6,8 @@
 package format
 
 import (
-	pb "good/api/proto/pb"
 	"fmt"
+	pb "good/api/proto/pb"
 	"net/url"
 	stdtime "time"
 

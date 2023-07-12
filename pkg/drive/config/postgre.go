@@ -1,6 +1,7 @@
 package config
 
 import (
+	"good/pkg/drive"
 	"good/pkg/drive/db"
 	"reflect"
 )
@@ -53,5 +54,5 @@ func (p PostgreDrive) Connect(key string, options interface{}, app interface{}) 
 
 // Default Default
 func (PostgreDrive) Default(key string) {
-	db.Orm = db.GetConnect(key)
+	drive.Orm = db.GetConnect(key)
 }

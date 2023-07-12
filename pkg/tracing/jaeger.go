@@ -5,7 +5,7 @@ import (
 	"github.com/uber/jaeger-client-go"
 	"github.com/uber/jaeger-client-go/transport"
 	"good/configs"
-	"good/pkg/drive/cache"
+	"good/pkg/drive"
 	"io"
 )
 
@@ -28,7 +28,7 @@ func NewJaegerTracer(service, jaegerHostPort string) io.Closer {
 //NewTrace NewTrace
 func NewTrace() error {
 	TraceCloser = NewJaegerTracer(configs.ENV.App.Name, configs.ENV.Trace.Endpoint)
-	cache.AddTracingHook()
+	drive.Cache.AddTracingHook()
 	return nil
 }
 

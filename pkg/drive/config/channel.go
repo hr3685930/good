@@ -1,6 +1,7 @@
 package config
 
 import (
+	"good/pkg/drive"
 	"good/pkg/drive/queue"
 	"reflect"
 )
@@ -34,5 +35,5 @@ func (m ChannelDrive) Connect(key string, options interface{}, app interface{}) 
 
 // Default Default
 func (ChannelDrive) Default(key string) {
-	queue.MQ = queue.GetQueueDrive(key)
+	drive.Queue = queue.GetQueueDrive(key)
 }

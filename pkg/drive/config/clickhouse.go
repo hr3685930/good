@@ -1,6 +1,7 @@
 package config
 
 import (
+	"good/pkg/drive"
 	"good/pkg/drive/db"
 	"reflect"
 )
@@ -55,5 +56,5 @@ func (m ClickhouseDrive) Connect(key string, options interface{}, app interface{
 
 // Default Default
 func (m ClickhouseDrive) Default(key string) {
-	db.Orm = db.GetConnect(key)
+	drive.Orm = db.GetConnect(key)
 }

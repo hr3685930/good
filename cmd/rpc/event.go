@@ -3,8 +3,8 @@ package rpc
 import (
 	"context"
 	proto "good/api/proto/pb"
-	"good/cmd/app/job"
-	"good/internal/utils/format"
+	"good/cmd/job"
+	"good/internal/pkg/format"
 )
 
 // Event Event

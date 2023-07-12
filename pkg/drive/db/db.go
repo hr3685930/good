@@ -6,9 +6,6 @@ import (
 	"sync"
 )
 
-// Orm Orm
-var Orm *gorm.DB
-
 // ConnStore ConnStore
 var ConnStore sync.Map
 

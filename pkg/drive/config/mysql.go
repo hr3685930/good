@@ -1,6 +1,7 @@
 package config
 
 import (
+	"good/pkg/drive"
 	"good/pkg/drive/db"
 	"reflect"
 )
@@ -54,5 +55,5 @@ func (m MYSQLDrive) Connect(key string, options interface{}, app interface{}) er
 
 // Default Default
 func (MYSQLDrive) Default(key string) {
-	db.Orm = db.GetConnect(key)
+	drive.Orm = db.GetConnect(key)
 }

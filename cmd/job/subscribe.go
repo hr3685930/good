@@ -5,10 +5,24 @@ import (
 	"github.com/ThreeDotsLabs/watermill/message"
 	"github.com/ThreeDotsLabs/watermill/message/router/middleware"
 	"github.com/urfave/cli"
+	"good/configs"
 	"good/internal/pkg/errs/export"
-	"good/pkg/drive/queue"
+	"good/pkg/drive"
 	"good/pkg/goo"
 )
+
+// NewQueueJob NewQueueJob
+func NewQueueJob() error  {
+	err := drive.Queue.NewPublisher()
+	if err != nil {
+		return err
+	}
+
+	if configs.ENV.Queue.Default == "channel" {
+		go SubscribeAll()
+	}
+	return nil
+}
 
 // Queue Queue
 func Queue(c *cli.Context) {
@@ -21,11 +35,11 @@ func Queue(c *cli.Context) {
 
 // Subscribe Subscribe
 func Subscribe(topic string) {
-	err := queue.MQ.NewRoute()
+	err := drive.Queue.NewRoute()
 	if err != nil {
 		panic(err.Error())
 	}
-	queue.MQ.Subscribe(topic, func(ctx context.Context, msg []byte) error {
+	drive.Queue.Subscribe(topic, func(ctx context.Context, msg []byte) error {
 		var g goo.Group
 		for _, lis := range TopicListener[topic] {
 			listen := lis
@@ -43,18 +57,18 @@ func Subscribe(topic string) {
 		return nil
 	})
 
-	if err = queue.MQ.RunRoute(context.Background()); err != nil {
+	if err = drive.Queue.RunRoute(context.Background()); err != nil {
 		panic(err)
 	}
 }
 
 // SubscribeAll SubscribeAll
 func SubscribeAll() {
-	err := queue.MQ.NewRoute()
+	err := drive.Queue.NewRoute()
 	if err != nil {
 		panic(err.Error())
 	}
-	queue.MQ.AddHandler(func(route *message.Router) {
+	drive.Queue.AddHandler(func(route *message.Router) {
 		route.AddMiddleware(
 			middleware.CorrelationID,
 			middleware.Recoverer,
@@ -63,7 +77,7 @@ func SubscribeAll() {
 	})
 
 	for topic, listeners := range TopicListener {
-		queue.MQ.Subscribe(topic, func(ctx context.Context, msg []byte) error {
+		drive.Queue.Subscribe(topic, func(ctx context.Context, msg []byte) error {
 			var g goo.Group
 			for _, lis := range listeners {
 				listen := lis
@@ -82,7 +96,7 @@ func SubscribeAll() {
 		})
 	}
 
-	if err = queue.MQ.RunRoute(context.Background()); err != nil {
+	if err = drive.Queue.RunRoute(context.Background()); err != nil {
 		panic(err)
 	}
 }

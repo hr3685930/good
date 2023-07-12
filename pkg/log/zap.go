@@ -1,4 +1,4 @@
-package zap
+package log
 
 import (
 	"go.uber.org/zap"
@@ -6,9 +6,6 @@ import (
 	"os"
 	"time"
 )
-
-// Logger Logger
-var Logger *zap.Logger
 
 // Log Log
 type Log struct {
@@ -21,10 +18,10 @@ func NewLog(filePath, fileName string) *Log {
 	return &Log{filePath, fileName}
 }
 
-// Init Init
-func (z *Log) Init() (err error) {
+// InitZap InitZap
+func (z *Log) InitZap() (zapLog *zap.Logger, err error) {
 	if err := z.createFile(z.filePath, z.fileName); err != nil {
-		return err
+		return nil, err
 	}
 	encoderConfig := zapcore.EncoderConfig{
 		TimeKey:       "time",
@@ -52,18 +49,14 @@ func (z *Log) Init() (err error) {
 		ErrorOutputPaths: []string{"stderr"},
 	}
 
-	Logger, err = config.Build()
-	if err != nil {
-		return err
-	}
-	return nil
+	return config.Build()
 }
 
 func (z *Log) createFile(filepath, filename string) error {
 	_, err := os.Stat(filepath + filename)
 	if err != nil {
 		if os.IsNotExist(err) {
-			err := os.MkdirAll(filepath, 0777)
+			err := os.MkdirAll(filepath, 0750)
 			if err != nil {
 				return err
 			}

@@ -1,6 +1,7 @@
 package config
 
 import (
+	"good/pkg/drive"
 	"good/pkg/drive/db"
 	"reflect"
 )
@@ -39,5 +40,5 @@ func (s SQLiteDrive) Connect(key string, options interface{}, app interface{}) e
 
 // Default Default
 func (SQLiteDrive) Default(key string) {
-	db.Orm = db.GetConnect(key)
+	drive.Orm = db.GetConnect(key)
 }

@@ -1,6 +1,7 @@
 package config
 
 import (
+	"good/pkg/drive"
 	"good/pkg/drive/queue"
 	"reflect"
 )
@@ -50,5 +51,5 @@ func (m RabbitMQDrive) Connect(key string, options interface{}, app interface{})
 
 // Default Default
 func (RabbitMQDrive) Default(key string) {
-	queue.MQ = queue.GetQueueDrive(key)
+	drive.Queue = queue.GetQueueDrive(key)
 }

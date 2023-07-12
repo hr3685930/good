@@ -1,20 +1,26 @@
-package utils
+package page
 
 import (
 	"github.com/pilagod/gorm-cursor-paginator/v2/paginator"
 	proto "good/api/proto/pb"
 )
 
-// PageRequest PageRequest
-type PageRequest struct {
+// Request Request
+type Request struct {
 	NextPageToken *string `json:"next_page_token"`
 	LastPageToken *string `json:"last_page_token"`
 	Limit         *int    `json:"limit"`
 	SortBy        []Sort  `json:"sort_by"`
 }
 
-// ToPagePB ToPagePB
-func (p *PageRequest) ToPagePB() *proto.PageReq {
+// Sort Sort
+type Sort struct {
+	Key  string `json:"key"`
+	Sort string `json:"sort"`
+}
+
+// ToPB ToPB
+func (p *Request) ToPB() *proto.PageReq {
 	res := &proto.PageReq{}
 	if p.Limit != nil {
 		l := int64(*p.Limit)
@@ -34,15 +40,11 @@ func (p *PageRequest) ToPagePB() *proto.PageReq {
 	return res
 }
 
-// Sort Sort
-type Sort struct {
-	Key  string `json:"key"`
-	Sort string `json:"sort"`
-}
 
-// NewPageRequest NewPageRequest
-func NewPageRequest(req *proto.PageReq) *PageRequest {
-	p := &PageRequest{}
+
+// NewPBRequest NewPBRequest
+func NewPBRequest(req *proto.PageReq) *Request {
+	p := &Request{}
 	if req != nil {
 		p.NextPageToken = req.NextPageToken
 		p.LastPageToken = req.LastPageToken
@@ -64,22 +66,22 @@ func NewPageRequest(req *proto.PageReq) *PageRequest {
 	return p
 }
 
-// PageResult PageResult
-type PageResult struct {
+// Result Result
+type Result struct {
 	NextPageToken *string `json:"next_page_token"`
 	LastPageToken *string `json:"last_page_token"`
 }
 
-// CursorToPageResult CursorToPageResult
-func CursorToPageResult(c paginator.Cursor) *PageResult {
-	return &PageResult{
+// CursorToResult CursorToResult
+func CursorToResult(c paginator.Cursor) *Result {
+	return &Result{
 		NextPageToken: c.After,
 		LastPageToken: c.Before,
 	}
 }
 
-// ToPagePB ToPagePB
-func (p *PageResult) ToPagePB() *proto.PageRes {
+// ToPB ToPB
+func (p *Result) ToPB() *proto.PageRes {
 	res := &proto.PageRes{}
 	if p.NextPageToken == nil {
 		res.NextPageToken = ""
@@ -97,7 +99,7 @@ func (p *PageResult) ToPagePB() *proto.PageRes {
 }
 
 // NewPaginator NewPaginator
-func NewPaginator(query *PageRequest) *paginator.Paginator {
+func NewPaginator(query *Request) *paginator.Paginator {
 	opts := []paginator.Option{
 		&paginator.Config{
 			Keys:  []string{"ID"},
@@ -132,3 +134,4 @@ func NewPaginator(query *PageRequest) *paginator.Paginator {
 	}
 	return paginator.New(opts...)
 }
+

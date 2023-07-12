@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"github.com/urfave/cli"
 	"good/configs"
-	"good/pkg/drive/db"
+	"good/pkg/drive"
 )
 
 // Migrate migrate
 func Migrate(c *cli.Context) {
-	dbs := db.Orm.Debug()
+	dbs := drive.Orm.Debug()
 	if configs.ENV.App.Env != "testing" {
 		dbs = dbs.Set("gorm:table_options", "CHARSET=utf8mb4")
 	}

@@ -1,6 +1,7 @@
 package config
 
 import (
+	"good/pkg/drive"
 	"good/pkg/drive/cache"
 	"good/pkg/drive/cache/redis"
 	"reflect"
@@ -53,5 +54,5 @@ func (m RedisDrive) Connect(key string, options interface{}, app interface{}) er
 
 // Default Default
 func (RedisDrive) Default(key string) {
-	cache.Cached = cache.GetCache(key)
+	drive.Cache = cache.GetCache(key)
 }

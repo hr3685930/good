@@ -9,9 +9,6 @@ import (
 // CacheMap CacheMap
 var CacheMap sync.Map
 
-// Cached Cached
-var Cached Cache
-
 // GetCache GetCache
 func GetCache(c string) Cache {
     v, ok := CacheMap.Load(c);
@@ -19,16 +16,6 @@ func GetCache(c string) Cache {
         return v.(Cache)
     }
     return nil
-}
-
-// AddTracingHook AddTracingHook
-func AddTracingHook() {
-    Cached.AddTracingHook()
-}
-
-// AddMetricHook AddMetricHook
-func AddMetricHook() {
-    Cached.AddMetricHook()
 }
 
 // Cache Cache

@@ -31,7 +31,6 @@ func (A *AMQP) NewPublisher() error {
 	if err != nil {
 		panic(err)
 	}
-
 	A.Pub = publisher
 	return nil
 }

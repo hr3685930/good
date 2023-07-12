@@ -2,6 +2,7 @@ package test
 
 import (
 	"context"
+	"good/cmd"
 	"good/cmd/app"
 	"good/configs"
 	"good/internal/logic/script"
@@ -24,7 +25,7 @@ func TestMain(m *testing.M) {
 
 func config() {
 	ctx := context.Background()
-	_ = app.Config()
+	_ = cmd.Config()
 	configs.ENV.App.Name = "test"
 	configs.ENV.App.Debug = true
 	configs.ENV.App.ErrReport = ""
@@ -33,8 +34,6 @@ func config() {
 	configs.ENV.Database.Default = "sqlite"
 	configs.ENV.Cache.Default = "sync"
 	_ = app.Log()
-	_ = app.Database(ctx, true)
-	_ = app.Queue(ctx, true)
-	_ = app.Cache(ctx, true)
-	_ = app.APP()
+	_ = cmd.Drive(ctx)
+	_ = cmd.APP()
 }
