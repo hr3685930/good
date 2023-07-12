@@ -11,6 +11,9 @@ import (
 	"strings"
 )
 
+// IgnoreErr ignore error
+var IgnoreErr = false
+
 // App App
 type App struct {
 	Name  string

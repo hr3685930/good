@@ -41,7 +41,7 @@ func (m RedisDrive) Connect(key string, options interface{}, app interface{}) er
 		}
 
 	}
-	if m.App.Env == "testing" {
+	if IgnoreErr {
 		return nil
 	}
 	c, err := redis.New(m.Dsn)

@@ -41,7 +41,7 @@ func (m MYSQLDrive) Connect(key string, options interface{}, app interface{}) er
 		}
 	}
 
-	if m.App.Env == "testing" {
+	if IgnoreErr {
 		return nil
 	}
 	mysqlDB := db.NewMySQL(m.Dsn, m.App.Debug)

@@ -40,10 +40,9 @@ func (m KafkaDrive) Connect(key string, options interface{}, app interface{}) er
 		}
 	}
 
-	if m.App.Env == "testing" {
+	if IgnoreErr {
 		return nil
 	}
-
 	kafkaMQ := queue.NewKafka(m.Addr, m.App.Name)
 	_, err := kafkaMQ.GetCli()
 	if err != nil {

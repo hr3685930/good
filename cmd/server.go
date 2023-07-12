@@ -29,6 +29,9 @@ func Config() error {
 
 // Drive Drive
 func Drive(ctx context.Context) error {
+	if configs.ENV.App.Env == "testing" {
+		config.IgnoreErr = true
+	}
 	_, err := hunch.All(
 		ctx,
 		func(ctx context.Context) (interface{}, error) {

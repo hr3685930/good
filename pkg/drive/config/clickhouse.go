@@ -41,7 +41,7 @@ func (m ClickhouseDrive) Connect(key string, options interface{}, app interface{
 		}
 	}
 
-	if m.App.Env == "testing" {
+	if IgnoreErr {
 		return nil
 	}
 
