@@ -8,13 +8,11 @@ import (
 )
 
 // SQLite SQLite
-type SQLite struct {
-	debug bool
-}
+type SQLite struct{}
 
 // NewSqlite NewSqlite
-func NewSqlite(debug bool) *SQLite {
-	return &SQLite{debug}
+func NewSqlite() *SQLite {
+	return &SQLite{}
 }
 
 // Connect Connect

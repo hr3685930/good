@@ -3,7 +3,6 @@ package test
 import (
 	"context"
 	"good/cmd"
-	"good/cmd/app"
 	"good/configs"
 	"good/internal/logic/script"
 	"google.golang.org/grpc"
@@ -33,7 +32,6 @@ func config() {
 	configs.ENV.Queue.Default = "channel"
 	configs.ENV.Database.Default = "sqlite"
 	configs.ENV.Cache.Default = "sync"
-	_ = app.Log()
 	_ = cmd.Drive(ctx)
 	_ = cmd.APP()
 }

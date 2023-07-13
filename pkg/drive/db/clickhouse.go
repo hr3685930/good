@@ -10,12 +10,11 @@ import (
 // ClickHouse ClickHouse
 type ClickHouse struct {
 	dsn   string
-	debug bool
 }
 
 // NewClickHouse NewClickHouse
-func NewClickHouse(dsn string, debug bool) *ClickHouse {
-	return &ClickHouse{dsn, debug}
+func NewClickHouse(dsn string) *ClickHouse {
+	return &ClickHouse{dsn}
 }
 
 // Connect Connect

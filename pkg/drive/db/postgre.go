@@ -10,12 +10,11 @@ import (
 // Postgre Postgre
 type Postgre struct {
 	dsn   string
-	debug bool
 }
 
 // NewPostgre NewPostgre
-func NewPostgre(dsn string, debug bool) *Postgre {
-	return &Postgre{dsn, debug}
+func NewPostgre(dsn string) *Postgre {
+	return &Postgre{dsn}
 }
 
 // Connect Connect

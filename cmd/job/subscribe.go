@@ -7,13 +7,13 @@ import (
 	"github.com/urfave/cli"
 	"good/configs"
 	"good/internal/pkg/errs/export"
-	"good/pkg/drive"
+	"good/pkg/drive/queue"
 	"good/pkg/goo"
 )
 
 // NewQueueJob NewQueueJob
 func NewQueueJob() error  {
-	err := drive.Queue.NewPublisher()
+	err := queue.MQ.NewPublisher()
 	if err != nil {
 		return err
 	}
@@ -35,11 +35,11 @@ func Queue(c *cli.Context) {
 
 // Subscribe Subscribe
 func Subscribe(topic string) {
-	err := drive.Queue.NewRoute()
+	err := queue.MQ.NewRoute()
 	if err != nil {
 		panic(err.Error())
 	}
-	drive.Queue.Subscribe(topic, func(ctx context.Context, msg []byte) error {
+	queue.MQ.Subscribe(topic, func(ctx context.Context, msg []byte) error {
 		var g goo.Group
 		for _, lis := range TopicListener[topic] {
 			listen := lis
@@ -57,18 +57,18 @@ func Subscribe(topic string) {
 		return nil
 	})
 
-	if err = drive.Queue.RunRoute(context.Background()); err != nil {
+	if err = queue.MQ.RunRoute(context.Background()); err != nil {
 		panic(err)
 	}
 }
 
 // SubscribeAll SubscribeAll
 func SubscribeAll() {
-	err := drive.Queue.NewRoute()
+	err := queue.MQ.NewRoute()
 	if err != nil {
 		panic(err.Error())
 	}
-	drive.Queue.AddHandler(func(route *message.Router) {
+	queue.MQ.AddHandler(func(route *message.Router) {
 		route.AddMiddleware(
 			middleware.CorrelationID,
 			middleware.Recoverer,
@@ -77,7 +77,7 @@ func SubscribeAll() {
 	})
 
 	for topic, listeners := range TopicListener {
-		drive.Queue.Subscribe(topic, func(ctx context.Context, msg []byte) error {
+		queue.MQ.Subscribe(topic, func(ctx context.Context, msg []byte) error {
 			var g goo.Group
 			for _, lis := range listeners {
 				listen := lis
@@ -96,7 +96,7 @@ func SubscribeAll() {
 		})
 	}
 
-	if err = drive.Queue.RunRoute(context.Background()); err != nil {
+	if err = queue.MQ.RunRoute(context.Background()); err != nil {
 		panic(err)
 	}
 }

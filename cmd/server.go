@@ -13,8 +13,10 @@ import (
 	"good/cmd/rpc"
 	"good/configs"
 	"good/internal/logic/http"
-	"good/pkg/drive/config"
+	"good/pkg/drive"
+	"good/pkg/drive/cache"
 	"good/pkg/drive/db"
+	"good/pkg/drive/queue"
 	httpPkg "good/pkg/http"
 	"gorm.io/gorm/logger"
 	"os"
@@ -24,13 +26,13 @@ import (
 
 //Config config
 func Config() error {
-	return config.Load(&configs.ENV)
+	return drive.Load(&configs.ENV)
 }
 
 // Drive Drive
 func Drive(ctx context.Context) error {
 	if configs.ENV.App.Env == "testing" {
-		config.IgnoreErr = true
+		drive.IgnoreErr = true
 	}
 	_, err := hunch.All(
 		ctx,
@@ -63,7 +65,7 @@ func NewDatabase(ctx context.Context) error {
 		db.DefaultLogLevel = logger.Info
 	}
 	_, err := hunch.Retry(ctx, 0, func(c context.Context) (interface{}, error) {
-		err := config.Drive(configs.ENV.Database, configs.ENV.App)
+		err := drive.Drive(configs.ENV.Database)
 		if err != nil {
 			fmt.Println("db reconnect...", err)
 			time.Sleep(time.Second * 2)
@@ -71,13 +73,19 @@ func NewDatabase(ctx context.Context) error {
 		return nil, err
 	})
 
+	if configs.ENV.App.Env != "testing" {
+		go db.ListenDriveConnectFail(func() {
+			os.Exit(0)
+		})
+	}
+
 	return err
 }
 
 //NewCache NewCache
 func NewCache(ctx context.Context) error {
 	_, err := hunch.Retry(ctx, 0, func(c context.Context) (interface{}, error) {
-		err := config.Drive(configs.ENV.Cache, configs.ENV.App)
+		err := drive.Drive(configs.ENV.Cache)
 		if err != nil {
 			fmt.Println("cache reconnect...", err)
 			time.Sleep(time.Second * 2)
@@ -85,19 +93,32 @@ func NewCache(ctx context.Context) error {
 		return nil, err
 	})
 
+	if configs.ENV.App.Env != "testing" {
+		go cache.ListenDriveConnectFail(func() {
+			os.Exit(0)
+		})
+	}
+
 	return err
 }
 
 //NewQueue NewQueue
 func NewQueue(ctx context.Context) error {
+	queue.KafkaPrefixGroupName = configs.ENV.App.Name
 	_, err := hunch.Retry(ctx, 0, func(c context.Context) (interface{}, error) {
-		err := config.Drive(configs.ENV.Queue, configs.ENV.App)
+		err := drive.Drive(configs.ENV.Queue)
 		if err != nil {
 			fmt.Println("queue reconnect...", err)
 			time.Sleep(time.Second * 2)
 		}
 		return nil, err
 	})
+
+	if configs.ENV.App.Env != "testing" {
+		go queue.ListenDriveConnectFail(func() {
+			os.Exit(0)
+		})
+	}
 	return err
 }
 

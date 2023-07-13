@@ -4,8 +4,6 @@ import (
 	"github.com/opentracing/opentracing-go"
 	"github.com/uber/jaeger-client-go"
 	"github.com/uber/jaeger-client-go/transport"
-	"good/configs"
-	"good/pkg/drive"
 	"io"
 )
 
@@ -24,14 +22,6 @@ func NewJaegerTracer(service, jaegerHostPort string) io.Closer {
 	opentracing.SetGlobalTracer(tracer)
 	return closer
 }
-
-//NewTrace NewTrace
-func NewTrace() error {
-	TraceCloser = NewJaegerTracer(configs.ENV.App.Name, configs.ENV.Trace.Endpoint)
-	drive.Cache.AddTracingHook()
-	return nil
-}
-
 
 // TraceClose TraceClose
 func TraceClose() {

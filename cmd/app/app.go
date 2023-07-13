@@ -6,9 +6,9 @@ import (
 	"go.uber.org/zap"
 	"good/configs"
 	"good/internal/pkg/errs/export"
-	"good/pkg/drive"
 	"good/pkg/drive/cache"
 	"good/pkg/drive/cache/redis"
+	"good/pkg/drive/db"
 	"good/pkg/drive/queue"
 	"good/pkg/goo"
 	"good/pkg/log"
@@ -22,11 +22,11 @@ import (
 var (
 	// Logger Logger
 	Logger *zap.Logger
-	// Queue instance
+	// Queue Queue
 	Queue queue.Queue
 	// Orm Orm
 	Orm *gorm.DB
-	// Cache Cached
+	// Cache Cache
 	Cache cache.Cache
 	// Kafka Kafka
 	Kafka sarama.Client
@@ -41,25 +41,29 @@ func NewAPP() error {
 		return err
 	}
 	InitFacade()
-	if configs.ENV.App.Env != "testing" {
-		drive.ListenDriveErr(func() {
-			os.Exit(0)
-		})
-	}
 	goo.New()
 	goo.AsyncErrFunc = export.GoroutineErr
-	err = tracing.NewTrace()
+	err = NewTrace()
 	if err != nil {
 		return err
 	}
 	return Signal()
 }
 
+
+//NewTrace NewTrace
+func NewTrace() error {
+	tracing.TraceCloser = tracing.NewJaegerTracer(configs.ENV.App.Name, configs.ENV.Trace.Endpoint)
+	Cache.AddTracingHook()
+	return nil
+}
+
+
 // InitFacade InitFacade
 func InitFacade() {
-	Queue = drive.Queue
-	Orm = drive.Orm
-	Cache = drive.Cache
+	Queue = queue.MQ
+	Orm = db.Orm
+	Cache = cache.Cached
 	if queue.GetQueueDrive("kafka") != nil {
 		KafkaDrive := queue.GetQueueDrive("kafka").(*queue.Kafka)
 		Kafka, _ = KafkaDrive.GetCli()

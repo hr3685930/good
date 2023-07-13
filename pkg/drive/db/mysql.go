@@ -10,12 +10,11 @@ import (
 // MySQL MySQL
 type MySQL struct {
 	dsn   string
-	debug bool
 }
 
 // NewMySQL NewMySQL
-func NewMySQL(dsn string, debug bool) *MySQL {
-	return &MySQL{dsn, debug}
+func NewMySQL(dsn string) *MySQL {
+	return &MySQL{dsn}
 }
 
 // Connect Connect
