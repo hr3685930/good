@@ -52,7 +52,7 @@ func Drive(driveEnv interface{}) error {
 
 	dOption := make([]reflect.Value, 1)
 	dOption[0] = reflect.ValueOf(strings.ToLower(defaultDrive))
-	d := valInfo.Field(defaultDriveIndex).MethodByName("Default")
+	d := valInfo.Field(defaultDriveIndex).MethodByName("Register")
 	d.Call(dOption)
 	return nil
 }
