@@ -19,7 +19,7 @@ var IgnoreErr = false
 // Conf Conf
 type Conf interface {
 	Connect(key string) error
-	Default(key string)
+	Register(key string)
 }
 
 // Drive Drive

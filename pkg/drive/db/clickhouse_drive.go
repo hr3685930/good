@@ -21,7 +21,7 @@ func (m ClickhouseDrive) Connect(key string) error {
 	return nil
 }
 
-// Default Default
-func (m ClickhouseDrive) Default(key string) {
+// Register Register
+func (m ClickhouseDrive) Register(key string) {
 	Orm = GetConnect(key)
 }

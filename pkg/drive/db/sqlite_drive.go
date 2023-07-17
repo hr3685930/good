@@ -14,7 +14,7 @@ func (s SQLiteDrive) Connect(key string) error {
 	return nil
 }
 
-// Default Default
-func (SQLiteDrive) Default(key string) {
+// Register Register
+func (SQLiteDrive) Register(key string) {
 	Orm = GetConnect(key)
 }

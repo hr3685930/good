@@ -21,7 +21,7 @@ func (m MYSQLDrive) Connect(key string) error {
 	return nil
 }
 
-// Default Default
-func (MYSQLDrive) Default(key string) {
+// Register Register
+func (MYSQLDrive) Register(key string) {
 	Orm = GetConnect(key)
 }

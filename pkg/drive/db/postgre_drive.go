@@ -21,7 +21,7 @@ func (p PostgreDrive) Connect(key string) error {
 	return nil
 }
 
-// Default Default
-func (PostgreDrive) Default(key string) {
+// Register Register
+func (PostgreDrive) Register(key string) {
 	Orm = GetConnect(key)
 }

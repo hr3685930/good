@@ -14,7 +14,7 @@ func (m Drive) Connect(key string) error {
 	return nil
 }
 
-// Default Default
-func (Drive) Default(key string) {
+// Register Register
+func (Drive) Register(key string) {
 	cache.Cached = cache.GetCache(key)
 }

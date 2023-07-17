@@ -24,7 +24,7 @@ func (m KafkaDrive) Connect(key string) error {
 	return nil
 }
 
-// Default Default
-func (KafkaDrive) Default(key string) {
+// Register Register
+func (KafkaDrive) Register(key string) {
 	MQ = GetQueueDrive(key)
 }

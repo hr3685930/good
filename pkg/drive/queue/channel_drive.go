@@ -10,7 +10,7 @@ func (m ChannelDrive) Connect(key string) error {
 	return nil
 }
 
-// Default Default
-func (ChannelDrive) Default(key string) {
+// Register Register
+func (ChannelDrive) Register(key string) {
 	MQ = GetQueueDrive(key)
 }

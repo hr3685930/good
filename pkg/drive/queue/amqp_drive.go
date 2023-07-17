@@ -17,7 +17,7 @@ func (m RabbitMQDrive) Connect(key string) error {
 	return nil
 }
 
-// Default Default
-func (RabbitMQDrive) Default(key string) {
+// Register Register
+func (RabbitMQDrive) Register(key string) {
 	MQ = GetQueueDrive(key)
 }
