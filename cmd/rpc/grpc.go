@@ -46,7 +46,7 @@ func NewGrpc() error {
 	return err
 }
 
-// recoverFunc recover 自定义
+// recoverFunc recover custom func
 func recoverFunc(p interface{}) (err error) {
 	return errs.InternalError(fmt.Sprintf("%v", p))
 }

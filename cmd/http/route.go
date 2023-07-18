@@ -16,7 +16,7 @@ func Routes(e *http.Router) {
 		httpPkg.TimeoutMiddleware(time.Second*10),
 		httpPkg.ErrHandler(export.HTTPErrorReport),
 		gin.CustomRecovery(func(c *gin.Context, err interface{}) {
-			_ = c.Error(errs.InternalError("系统错误"))
+			_ = c.Error(errs.InternalError("internal error"))
 		}),
 	)
 
@@ -25,7 +25,7 @@ func Routes(e *http.Router) {
 	})
 
 	e.POST("/event", eventHandler)
-	api := e.Group("/api", middleware.Auth())
+	api := e.Group("/api", middleware.Auth)
 	{
 		api.GET("/user", http.GetUser)
 	}

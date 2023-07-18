@@ -24,17 +24,17 @@ import (
 	"time"
 )
 
-//Config config
-func Config() error {
-	return drive.Load(&configs.ENV)
-}
-
 // Drive Drive
 func Drive(ctx context.Context) error {
+	err := drive.Load(&configs.ENV)
+	if err != nil {
+		return err
+	}
+
 	if configs.ENV.App.Env == "testing" {
 		drive.IgnoreErr = true
 	}
-	_, err := hunch.All(
+	_, err = hunch.All(
 		ctx,
 		func(ctx context.Context) (interface{}, error) {
 			return nil, NewDatabase(ctx)

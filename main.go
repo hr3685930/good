@@ -11,9 +11,6 @@ func main() {
 	_, err := hunch.Waterfall(
 		ctx,
 		func(ctx context.Context, n interface{}) (interface{}, error) {
-			return nil, cmd.Config()
-		},
-		func(ctx context.Context, n interface{}) (interface{}, error) {
 			return nil, cmd.Drive(ctx)
 		},
 		func(ctx context.Context, n interface{}) (interface{}, error) {
